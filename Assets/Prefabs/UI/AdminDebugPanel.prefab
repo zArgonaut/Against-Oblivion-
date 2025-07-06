@@ -1,0 +1,10 @@
+// Prefab: AdminDebugPanel
+// Descrição: Painel de debug com botões para spawnar chefe,
+// modificar pontuação e mudar dificuldade em tempo de execução.
+Componentes:
+- Canvas (Screen Space Overlay)
+- Botão "Spawn Boss" -> AdminDebugPanel.SpawnBoss
+- Botão "+100 Pontos" -> AdminDebugPanel.ModifyScore(100)
+- Botão "-100 Pontos" -> AdminDebugPanel.ModifyScore(-100)
+- Dropdown "Dificuldade" -> AdminDebugPanel.ChangeDifficulty
+- Script: AdminDebugPanel.cs (controle e toggle via tecla F10)

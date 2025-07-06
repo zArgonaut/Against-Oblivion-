@@ -1,0 +1,4 @@
+// Prefab: Canvas_LojaEntreFases
+// Descrição: Tela de loja com txtPontos e btnUpgrades
+Componentes:
+// - Canvas, TextMeshProUGUI txtPontos, Buttons para upgrades com ShopManager.cs

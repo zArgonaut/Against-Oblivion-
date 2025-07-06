@@ -1,0 +1,3 @@
+// Prefab: Spawner
+// Descricao: objeto que instancia inimigos em ondas durante o jogo.
+// Adicione o script HordaManager para controlar os spawns.

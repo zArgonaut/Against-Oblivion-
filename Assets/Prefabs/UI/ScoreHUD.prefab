@@ -1,0 +1,6 @@
+// Prefab: ScoreHUD
+// Descrição: HUD de pontuação exibindo o total de pontos do jogador
+Componentes:
+- Canvas (Screen Space Overlay)
+- TextMeshProUGUI (nome: TextoPontos)
+- Script: ScoreManager.cs (vincular TextoPontos)

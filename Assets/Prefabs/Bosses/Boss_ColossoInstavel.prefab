@@ -1,0 +1,3 @@
+// Prefab: Boss_ColossoInstavel
+// Componentes: SpriteRenderer, Animator, Rigidbody, BoxCollider
+// Scripts: ColossoInstavel.cs

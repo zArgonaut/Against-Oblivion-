@@ -1,0 +1,7 @@
+// Prefab: MiniMapa
+// Descrição: Mini mapa simples exibindo posições dos inimigos ao redor do jogador
+Componentes:
+- RectTransform (objeto raiz)
+- Filho "Area" com RectTransform para receber os blips
+- Filho "Blip" (Image) usado como prefab de ponto
+- Script: MiniMapa.cs (configurar fields area, blipPrefab, player, range)

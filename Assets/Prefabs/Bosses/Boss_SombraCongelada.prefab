@@ -1,0 +1,3 @@
+// Prefab: Boss_SombraCongelada
+// Componentes: SpriteRenderer, Animator, Rigidbody, BoxCollider
+// Scripts: SombraCongelada.cs
