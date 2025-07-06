@@ -11,8 +11,8 @@ Projeto de desenvolvimento de jogo em primeira pessoa (FPS) com múltiplas fases
 - **Curso:** Ciência da Computação  
 - **Disciplina:** Computação Gráfica  
 - **Instituição:** Universidade Federal Rural do Rio de Janeiro (UFRRJ)  
-- **Professora:** [Nome da professora, se desejar incluir]  
-- **Período:** [Semestre e ano do curso, ex: 2025.1]  
+- **Professora:** Bruno Dembogurski 
+- **Período:** 2025.1  
 
 ## Integrantes
 
