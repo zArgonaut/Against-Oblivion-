@@ -1,4 +1,5 @@
 %YAML 1.1
+# Usa Assets/Prefabs/UI/Canvas_MainMenu.prefab
 %TAG !u! tag:unity3d.com,2011:
 --- !u!29 &1
 OcclusionCullingSettings:
