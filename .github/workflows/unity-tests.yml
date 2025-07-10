@@ -1,0 +1,34 @@
+name: Unity - Testes Automatizados
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache do Unity
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/unity3d
+          key: ${{ runner.os }}-unity
+
+      - name: Setup Unity
+        uses: game-ci/unity-actions/setup@v2
+        with:
+          unityVersion: 2022.3.0f1
+
+      - name: Rodar testes (EditMode)
+        uses: game-ci/unity-actions/test@v2
+        with:
+          testMode: editmode
+
+      - name: Rodar testes (PlayMode)
+        uses: game-ci/unity-actions/test@v2
+        with:
+          testMode: playmode
