@@ -1,4 +1,5 @@
 // Prefab: Canvas_MainMenu
-// Descrição: Menu principal com botões JOGAR, LOJA, SAIR
+// Descrição: Menu principal com botões JOGAR, CONTINUAR, LOJA e SAIR
 Componentes:
-// - Canvas, Buttons com métodos em MenuManager.cs
+// - Canvas
+// - Botões "Jogar", "Continuar", "Loja" e "Sair" (métodos em MenuManager.cs)
