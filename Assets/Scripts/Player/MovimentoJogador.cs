@@ -7,7 +7,7 @@ public class MovimentoJogador : MonoBehaviour
     [Header("Parâmetros de Movimento")]
     public float velocidadeAndar = 3f;
     public float velocidadeCorrer = 6f;
-    public float suavidadeRotacao = 10f;
+    public float suavidadeRotacao = 10f; // usado apenas para animacoes
     public float alturaPulo = 1.5f;
     public float gravidade = -9.81f;
     public float aceleracao = 10f;
@@ -19,6 +19,13 @@ public class MovimentoJogador : MonoBehaviour
 
     [Header("Referências")]
     public Transform cameraTransform;
+
+    [Header("Mouse Look")]
+    public float sensibilidadeMouse = 100f;
+    [Range(-90f, 0f)] public float limiteInferior = -60f;
+    [Range(0f, 90f)] public float limiteSuperior = 60f;
+
+    private float rotacaoX = 0f;
 
     private CharacterController controller;
     private Animator animator;
@@ -54,6 +61,7 @@ public class MovimentoJogador : MonoBehaviour
         CapturarInput();
         AtualizarEstadoDoChao();
         DetectarCliqueDuplo();
+        ProcessarRotacao();
         ProcessarMovimento();
         ProcessarPulo();
         AtualizarAnimacoes();
@@ -102,6 +110,20 @@ public class MovimentoJogador : MonoBehaviour
         }
     }
 
+    void ProcessarRotacao()
+    {
+        if (cameraTransform == null) return;
+
+        float mouseX = Input.GetAxis("Mouse X") * sensibilidadeMouse * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * sensibilidadeMouse * Time.deltaTime;
+
+        rotacaoX -= mouseY;
+        rotacaoX = Mathf.Clamp(rotacaoX, limiteInferior, limiteSuperior);
+
+        cameraTransform.localRotation = Quaternion.Euler(rotacaoX, 0f, 0f);
+        transform.Rotate(Vector3.up * mouseX);
+    }
+
     void ProcessarMovimento()
     {
     if (!controller.enabled || !gameObject.activeInHierarchy) return;
@@ -113,13 +135,6 @@ public class MovimentoJogador : MonoBehaviour
     // Suavização da velocidade
     float velocidadeReal = Mathf.Lerp(velocidadeAtual, velocidadeDesejada, Time.deltaTime * aceleracao);
     velocidadeAtual = velocidadeReal;
-
-    if (direcaoMovimento.magnitude >= 0.1f)
-    {
-        float anguloAlvo = Mathf.Atan2(direcaoMovimento.x, direcaoMovimento.z) * Mathf.Rad2Deg;
-        float angulo = Mathf.LerpAngle(transform.eulerAngles.y, anguloAlvo, Time.deltaTime * suavidadeRotacao);
-        transform.rotation = Quaternion.Euler(0f, angulo, 0f);
-    }
 
     Vector3 movimentoHorizontal = direcaoMovimento.normalized * velocidadeAtual;
     velocidadeVertical.y += gravidade * Time.deltaTime;
