@@ -6,8 +6,41 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 32515063faf1cfd42a58bd293f5d3aba
+  - enabled: 1
+    path: Assets/Scenes/Cena_TestesAgainstOblivion.unity
+    guid: c3f6a59bf6376714eae66b8ce9587c91
+  - enabled: 1
+    path: Assets/Scenes/Fase1_Deserto.unity
+    guid: a6f14ea926d8a0b429bf5dd6ea42500e
+  - enabled: 1
+    path: Assets/Scenes/Fase2_Floresta.unity
+    guid: bc97fe6ec7ed2ef4c87211c41a6c7b83
+  - enabled: 1
+    path: Assets/Scenes/Fase3_Montanhas.unity
+    guid: 44767a4e5657dec46912b109ef74a54a
+  - enabled: 1
+    path: Assets/Scenes/Fase4_Complexo.unity
+    guid: edd0ee5d25928da4ab73ca2b4751a615
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: e0c5dfacf97748d4aa7ebaf1d9b56527
+  - enabled: 1
+    path: Assets/Scenes/Loja.unity
+    guid: cf10fcaabe9a4bed8146d72c906c999c
+  - enabled: 1
+    path: Assets/Scenes/Modo_Horda.unity
+    guid: 0121c39133eb4040becd776e9ac69bd0
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/TesteJogabilidade.unity
+    guid: b08fb4e029ac50b41884f5866347758a
+  - enabled: 1
+    path: Assets/Scenes/Vitoria.unity
+    guid: f3f46f96ef3b44cc94ff84943d9a614b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
