@@ -16,7 +16,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/unity3d
-          key: ${{ runner.os }}-unity
+          key: ${{ runner.os }}-unity-${{ hashFiles('ProjectSettings/ProjectVersion.txt') }}
 
       - name: Rodar testes (EditMode)
         uses: game-ci/unity-test-runner@v4
