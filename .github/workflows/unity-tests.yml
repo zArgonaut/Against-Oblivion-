@@ -19,16 +19,21 @@ jobs:
           key: ${{ runner.os }}-unity
 
       - name: Setup Unity
-        uses: game-ci/unity-actions/setup@v2
+        uses: game-ci/unity-actions/setup@v3
         with:
           unityVersion: 2022.3.0f1
 
       - name: Rodar testes (EditMode)
-        uses: game-ci/unity-actions/test@v2
+        uses: game-ci/unity-actions/test@v3
         with:
           testMode: editmode
 
       - name: Rodar testes (PlayMode)
-        uses: game-ci/unity-actions/test@v2
+        uses: game-ci/unity-actions/test@v3
         with:
           testMode: playmode
+
+      - name: Executar prefab builder
+        uses: game-ci/unity-actions/cli@v3
+        with:
+          args: -batchmode -projectPath . -executeMethod BuildadorPrefabs.CriarPrefabs -quit
