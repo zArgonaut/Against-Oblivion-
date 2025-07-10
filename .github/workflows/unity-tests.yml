@@ -19,16 +19,25 @@ jobs:
           key: ${{ runner.os }}-unity-${{ hashFiles('ProjectSettings/ProjectVersion.txt') }}
 
       - name: Rodar testes (EditMode)
+        id: editmode
         uses: game-ci/unity-test-runner@v4
         with:
           unityVersion: 2022.3.0f1
           testMode: editmode
 
       - name: Rodar testes (PlayMode)
+        id: playmode
         uses: game-ci/unity-test-runner@v4
         with:
           unityVersion: 2022.3.0f1
           testMode: playmode
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: UnityTestResults
+          path: ${{ steps.playmode.outputs.artifactsPath }}
 
       - name: Executar prefab builder
         uses: game-ci/cli@main
