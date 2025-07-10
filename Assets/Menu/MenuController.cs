@@ -1,37 +1,46 @@
 using UnityEngine;
 using UnityEngine.Video;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
-    public VideoPlayer videoPlayer;
-    public GameObject menuOpcoes;
+    public VideoPlayer videoIntro1;
+    public VideoPlayer videoIntro2;
+
+    public GameObject painelTitulo;
+    public GameObject botaoCliqueParaContinuar;
+    public GameObject menuPrincipalPanel;
 
     void Start()
     {
-        if (menuOpcoes != null)
-            menuOpcoes.SetActive(false);
+        painelTitulo.SetActive(false);
+        botaoCliqueParaContinuar.SetActive(false);
+        menuPrincipalPanel.SetActive(false);
 
-        if (videoPlayer != null)
-            videoPlayer.loopPointReached += OnVideoFinished;
+        videoIntro1.loopPointReached += OnIntro1Fim;
+        videoIntro2.loopPointReached += OnIntro2Fim;
+
+        videoIntro1.Play();
     }
 
-    void Update()
+    void OnIntro1Fim(VideoPlayer vp)
     {
-        if (videoPlayer != null && videoPlayer.isPlaying && Input.anyKeyDown)
-        {
-            videoPlayer.Stop();
-            ShowOptions();
-        }
+        painelTitulo.SetActive(true);
+        botaoCliqueParaContinuar.SetActive(true);
     }
 
-    void OnVideoFinished(VideoPlayer vp)
+    public void IniciarVideo2()
     {
-        ShowOptions();
+        botaoCliqueParaContinuar.SetActive(false);
+        painelTitulo.SetActive(false);
+        videoIntro1.gameObject.SetActive(false);
+
+        videoIntro2.gameObject.SetActive(true);
+        videoIntro2.Play();
     }
 
-    void ShowOptions()
+    void OnIntro2Fim(VideoPlayer vp)
     {
-        if (menuOpcoes != null)
-            menuOpcoes.SetActive(true);
+        menuPrincipalPanel.SetActive(true);
     }
 }
