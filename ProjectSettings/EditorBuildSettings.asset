@@ -41,6 +41,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Vitoria.unity
     guid: f3f46f96ef3b44cc94ff84943d9a614b
+  - enabled: 1
+    path: Assets/Menu/MainMenu.unity
+    guid: de5fe66267e463540adf453cce31f2ee
+  - enabled: 1
+    path: Assets/Environment/Maps/Fase1_Deserto/Fase 1.unity
+    guid: ecfb180f9d2ae7f42bc73b4f3729282e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

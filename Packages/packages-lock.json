@@ -34,7 +34,6 @@
       "dependencies": {
         "com.unity.splines": "2.0.0",
         "com.unity.modules.imgui": "1.0.0"
-<<<<<<< HEAD
       },
       "url": "https://packages.unity.com"
     },
@@ -47,8 +46,6 @@
         "com.unity.test-framework": "1.4.5",
         "com.unity.nuget.mono-cecil": "1.11.4",
         "com.unity.test-framework.performance": "3.0.3"
-=======
->>>>>>> 48fe4c2d2e4b2a3e022cc2fa94504854ef4134a5
       },
       "url": "https://packages.unity.com"
     },
@@ -103,7 +100,6 @@
         "com.unity.modules.uielements": "1.0.0"
       }
     },
-<<<<<<< HEAD
     "com.unity.nuget.mono-cecil": {
       "version": "1.11.4",
       "depth": 3,
@@ -161,8 +157,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-=======
->>>>>>> 48fe4c2d2e4b2a3e022cc2fa94504854ef4134a5
     "com.unity.settings-manager": {
       "version": "2.1.0",
       "depth": 2,
@@ -170,7 +164,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-<<<<<<< HEAD
     "com.unity.shadergraph": {
       "version": "17.1.0",
       "depth": 1,
@@ -180,8 +173,6 @@
         "com.unity.searcher": "4.9.3"
       }
     },
-=======
->>>>>>> 48fe4c2d2e4b2a3e022cc2fa94504854ef4134a5
     "com.unity.splines": {
       "version": "2.8.1",
       "depth": 1,

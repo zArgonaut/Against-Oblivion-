@@ -1,46 +1,132 @@
 using UnityEngine;
-using UnityEngine.Video;
 using UnityEngine.UI;
+using UnityEngine.Video;
+using TMPro;
+using System.Collections;
 
 public class MenuController : MonoBehaviour
 {
-    public VideoPlayer videoIntro1;
-    public VideoPlayer videoIntro2;
+    [Header("Vídeo único")]
+    public VideoPlayer videoIntro;
 
-    public GameObject painelTitulo;
-    public GameObject botaoCliqueParaContinuar;
-    public GameObject menuPrincipalPanel;
+    [Header("Imagens de fundo")]
+    public GameObject imagemFundo1;
+    public GameObject imagemFundo2;
+
+    [Header("UI e transições")]
+    public GameObject textoPressioneTecla;
+    public Image fadeImage;
+
+    private bool aguardandoTecla = false;
+    private bool piscando = false;
 
     void Start()
     {
-        painelTitulo.SetActive(false);
-        botaoCliqueParaContinuar.SetActive(false);
-        menuPrincipalPanel.SetActive(false);
+        imagemFundo1.SetActive(false);
+        imagemFundo2.SetActive(false);
+        textoPressioneTecla.SetActive(false);
 
-        videoIntro1.loopPointReached += OnIntro1Fim;
-        videoIntro2.loopPointReached += OnIntro2Fim;
+        fadeImage.color = new Color(0, 0, 0, 1);
+        FadeIn();
 
-        videoIntro1.Play();
+        videoIntro.loopPointReached += OnVideoEnd;
+
+        StartCoroutine(ExibirImagemInicial());
     }
 
-    void OnIntro1Fim(VideoPlayer vp)
+    IEnumerator ExibirImagemInicial()
     {
-        painelTitulo.SetActive(true);
-        botaoCliqueParaContinuar.SetActive(true);
+        yield return new WaitForSeconds(1f);
+
+        imagemFundo1.SetActive(true);
+        yield return new WaitForSeconds(1f);
+
+        textoPressioneTecla.SetActive(true);
+        aguardandoTecla = true;
+        piscando = true;
+        StartCoroutine(PiscarTexto());
     }
 
-    public void IniciarVideo2()
+    void Update()
     {
-        botaoCliqueParaContinuar.SetActive(false);
-        painelTitulo.SetActive(false);
-        videoIntro1.gameObject.SetActive(false);
-
-        videoIntro2.gameObject.SetActive(true);
-        videoIntro2.Play();
+        if (aguardandoTecla && Input.anyKeyDown)
+        {
+            aguardandoTecla = false;
+            piscando = false;
+            textoPressioneTecla.SetActive(false);
+            StartCoroutine(IniciarVideo());
+        }
     }
 
-    void OnIntro2Fim(VideoPlayer vp)
+    IEnumerator IniciarVideo()
     {
-        menuPrincipalPanel.SetActive(true);
+        FadeOut();
+        yield return new WaitForSeconds(1f);
+
+        imagemFundo1.SetActive(false);
+        videoIntro.gameObject.SetActive(true);
+        videoIntro.Play();
+
+        FadeIn();
+    }
+
+    void OnVideoEnd(VideoPlayer vp)
+    {
+        StartCoroutine(TransicaoParaMenuFinal());
+    }
+
+    IEnumerator TransicaoParaMenuFinal()
+    {
+        FadeOut(); 
+        yield return new WaitForSeconds(1f);
+
+        videoIntro.gameObject.SetActive(false);
+        imagemFundo2.SetActive(true);
+
+        FadeIn();
+    }
+
+    void FadeIn()
+    {
+        StartCoroutine(Fade(1f, 0f));
+    }
+
+    void FadeOut()
+    {
+        StartCoroutine(Fade(0f, 1f));
+    }
+
+    IEnumerator Fade(float startAlpha, float endAlpha)
+    {
+        float t = 0f;
+        Color original = fadeImage.color;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime * 1.5f;
+            float alpha = Mathf.Lerp(startAlpha, endAlpha, t);
+            fadeImage.color = new Color(original.r, original.g, original.b, alpha);
+            yield return null;
+        }
+    }
+
+    IEnumerator PiscarTexto()
+    {
+        TextMeshProUGUI textoTMP = textoPressioneTecla.GetComponent<TextMeshProUGUI>();
+        if (textoTMP == null)
+        {
+            Debug.LogWarning("TextMeshProUGUI não encontrado.");
+            yield break;
+        }
+
+        while (piscando)
+        {
+            textoTMP.alpha = 1f;
+            yield return new WaitForSeconds(0.5f);
+            textoTMP.alpha = 0f;
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        textoTMP.alpha = 1f;
     }
 }
