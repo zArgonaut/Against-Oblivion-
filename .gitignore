@@ -1,73 +1,123 @@
-**/Assets/AddressableAssetsData/*/*.bin*
-**/Assets/AssetStoreTools
-**/Assets/StreamingAssets/aa.meta
-**/assets/addressableassetsdata/*/*.bin*
-**/assets/assetstoretools
-**/assets/streamingassets/*/aa/*
-*.VC.db
-*.aab
-*.apk
-*.app
-*.booproj
-*.csproj
-*.mdb
-*.mdb.meta
-*.opendb
-*.pdb
-*.pdb.meta
-*.pidb
-*.pidb.meta
-*.private
-*.private.meta
-*.sln
-*.suo
-*.svd
-*.tmp
-*.unitypackage
-*.unityproj
-*.user
-*.userprefs
-.DS_Store*
-.consulo
-.gradle
-.idea
-.vs
-.vscode
-.vscode/
-/Assets/Plugins/PlasticSCM*
-/assets/plugins/PlasticSCM*
-Build
-Builds
-Desktop.ini
-ExportedObj
-Library
-Logs
-Logs/
-MemoryCaptures
-Obj
-Obj/
-Temp
-Thumbs.db
-UserSettings
-UserSettings/
+#################################
+# UNITY
+#################################
+
+# Diretórios gerados pela Unity que NÃO devem ser versionados
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
 [Bb]uild/
 [Bb]uilds/
-[Ll]ibrary/
-[Mm]emoryCaptures/
-[Tt]emp/
-^*.private.[0-9]+$
-^*.private.[0-9]+.meta$
-build
-builds
-crashlytics-build.properties
-library
-logs
-memorycaptures
-obj
-sysinfo.txt
-temp
-usersettings
-~UnityDirMonSyncFile~*
+[Ll]ogs/
+MemoryCaptures/
+UserSettings/
 
-#.plastic workspace data
-.plastic/
+# Diretório usado por versões modernas da Unity para compilação
+[Bb]ee/
+*.pidb
+*.booproj
+*.svd
+
+# Cache de iluminação
+[Ll]ightmapSnapshot*
+LightingData.asset
+
+# Arquivos de build intermediário de Android e iOS
+.gradle/
+.idea/
+.local/
+*.apk
+*.aab
+*.ipa
+*.xcworkspace/
+*.xcuserdata/
+*.xcodeproj/project.xcworkspace/
+
+# Unity Cloud Build
+.cloud/
+
+# Crash e debug
+*.stacktrace
+*.crash
+
+# AssetBundle output
+AssetBundles/
+
+# Unity Collaborate
+.collabignore
+.collab/
+
+#################################
+# VISUAL STUDIO / VS CODE / RIDER
+#################################
+
+.vscode/
+.vs/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.unityproj
+
+# Rider
+.idea/
+*.iml
+
+#################################
+# SISTEMAS OPERACIONAIS
+#################################
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+*.swp
+
+# Linux
+*~
+
+#################################
+# GIT / SEGURANÇA
+#################################
+
+# Arquivos sensíveis
+*.key
+*.pem
+*.cert
+*.pfx
+
+# Arquivos de merge automático ou conflitos
+*.orig
+
+# Arquivos de backup do editor
+*.bak
+*.tmp
+*.old
+
+#################################
+# ARQUIVOS DO USUÁRIO (opcional)
+#################################
+
+# Evita arquivos que não são essenciais do desenvolvedor individual
+*.psd
+*.blend1
+*.sublime*
+*.code-workspace
+*.log
+*.mp4
+*.wav
+*.zip
+*.rar
+
+# Pasta de exportações locais (ex: builds temporários pessoais)
+Exports/
+ExportedPackages/
