@@ -16,7 +16,7 @@ public class MiniMapa : MonoBehaviour
     {
         if (player == null)
         {
-            var p = FindObjectOfType<PlayerMovement>();
+            var p = FindFirstObjectByType<PlayerMovement>();
             if (p) player = p.transform;
         }
         CreateBlips();
@@ -26,7 +26,7 @@ public class MiniMapa : MonoBehaviour
     {
         if (area == null || blipPrefab == null) return;
 
-        foreach (var enemy in FindObjectsOfType<EnemyHealth>())
+        foreach (var enemy in FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None))
         {
             if (!blips.ContainsKey(enemy.transform))
             {
