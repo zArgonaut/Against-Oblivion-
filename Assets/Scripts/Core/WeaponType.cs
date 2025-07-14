@@ -1,13 +1,9 @@
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using System.Collections.Generic;
-public enum WeaponType
+namespace Core
 {
-    Rifle,
-    Shotgun,
-    Grenade,
-    Club,
-    Porrete,
-    PaoBaguete
+    public enum WeaponType
+    {
+        Rifle,
+        Shotgun,
+        Porrete
+    }
 }
