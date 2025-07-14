@@ -2,39 +2,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-using Core;
-
-// Define WeaponType enum
-public enum WeaponType
-{
-    Rifle,
-    Shotgun,
-    Porrete
-}
-
-[System.Serializable]
-public class WeaponSlot
-{
-    public WeaponType tipo;
-    public int municao;
-    public int capacidade;
-}
-
-[System.Serializable]
-public class SlotUI
-{
-    public Image backgroundImage;
-    public Image iconImage;
-    public TextMeshProUGUI countText;
-    public Image highlightImage;
-}
+// using Core;  // seu namespace onde está WeaponType
 
 public class InventoryManager : MonoBehaviour
 {
-    [Header("Slot UI References")] 
-    public SlotUI[] slots = new SlotUI[6];
+    [Header("Slot Containers (drag & drop aqui)")]
+    [Tooltip("Arraste os 6 GameObjects dos slots, na ordem: Rifle, Shotgun, Porrete, Granada, Bandagem, Munição")]
+    public RectTransform[] slotContainers = new RectTransform[6];
 
-    [Header("Item Sprites")] 
+    [Header("Sprites dos Itens")]
     public Sprite rifleSprite;
     public Sprite shotgunSprite;
     public Sprite porreteSprite;
@@ -42,35 +18,36 @@ public class InventoryManager : MonoBehaviour
     public Sprite bandageSprite;
     public Sprite ammoSprite;
 
-    [Header("Inventory Data")] 
-    public WeaponSlot[] armas = new WeaponSlot[3];
-    public int grenades = 2;
-    public int bandagens;
-    public int powerUps;
-    public int indiceEquipada;
+    [Header("Dados de Inventário")]
+    public int grenades    = 2;
+    public int bandages   = 0;
+    public int ammoCount  = 30;
 
-    int slotSelecionado;
+    private Image[] icons;
+    private TMP_Text[] counts;
+    private Image[] highlights;
 
-    public event Action OnInventoryChanged;
+    private int selectedSlot = 0;
 
-    public WeaponSlot ArmaEquipada
+    void Awake()
     {
-        get
+        int n = slotContainers.Length;
+        icons       = new Image[n];
+        counts      = new TMP_Text[n];
+        highlights  = new Image[n];
+
+        for (int i = 0; i < n; i++)
         {
-            if (armas == null || armas.Length == 0) return null;
-            indiceEquipada = Mathf.Clamp(indiceEquipada, 0, armas.Length - 1);
-            return armas[indiceEquipada];
+            var root = slotContainers[i];
+            icons[i]      = root.Find("Icon").GetComponent<Image>();
+            counts[i]     = root.Find("CountText").GetComponent<TMP_Text>();
+            highlights[i] = root.Find("Highlight").GetComponent<Image>();
+            highlights[i].gameObject.SetActive(false);
         }
     }
 
     void Start()
     {
-        foreach (var s in slots)
-            if (s != null && s.highlightImage != null)
-                s.highlightImage.gameObject.SetActive(false);
-
-        slotSelecionado = 0;
-        indiceEquipada = 0;
         RefreshUI();
         UpdateHighlight();
     }
@@ -81,131 +58,69 @@ public class InventoryManager : MonoBehaviour
         HandleNumberKeys();
     }
 
-    void HandleScroll()
+    private void HandleScroll()
     {
         float d = Input.GetAxis("Mouse ScrollWheel");
-        if (d > 0f) SelectSlot((slotSelecionado + 1) % slots.Length);
-        else if (d < 0f) SelectSlot((slotSelecionado + slots.Length - 1) % slots.Length);
+        if (d > 0f) SelectSlot((selectedSlot + 1) % slotContainers.Length);
+        else if (d < 0f) SelectSlot((selectedSlot + slotContainers.Length - 1) % slotContainers.Length);
     }
 
-    void HandleNumberKeys()
+    private void HandleNumberKeys()
     {
-        for (int i = 0; i < slots.Length; i++)
+        for (int i = 0; i < slotContainers.Length; i++)
             if (Input.GetKeyDown(KeyCode.Alpha1 + i))
                 SelectSlot(i);
     }
 
-    public void SelectSlot(int idx)
+    private void SelectSlot(int idx)
     {
-        slotSelecionado = Mathf.Clamp(idx, 0, slots.Length - 1);
-        if (slotSelecionado < armas.Length)
-            indiceEquipada = slotSelecionado;
-        UpdateHighlight();
+        selectedSlot = idx;
         RefreshUI();
-        OnInventoryChanged?.Invoke();
-        ApplyCurrentItem();
+        UpdateHighlight();
     }
 
-    void UpdateHighlight()
+    private void UpdateHighlight()
     {
-        for (int i = 0; i < slots.Length; i++)
-            if (slots[i] != null && slots[i].highlightImage != null)
-                slots[i].highlightImage.gameObject.SetActive(i == slotSelecionado);
+        for (int i = 0; i < highlights.Length; i++)
+            highlights[i].gameObject.SetActive(i == selectedSlot);
     }
 
-    void RefreshUI()
+    private void RefreshUI()
     {
-        for (int i = 0; i < slots.Length; i++)
+        for (int i = 0; i < slotContainers.Length; i++)
         {
-            var ui = slots[i];
-            if (ui == null) continue;
+            Sprite icon = null;
+            string c    = "";
+
             switch (i)
             {
-                case 0:
-                    SetSlotUI(ui, rifleSprite, "");
-                    break;
-                case 1:
-                    SetSlotUI(ui, shotgunSprite, "");
-                    break;
-                case 2:
-                    SetSlotUI(ui, porreteSprite, "");
-                    break;
-                case 3:
-                    SetSlotUI(ui, grenadeSprite, grenades.ToString());
-                    break;
-                case 4:
-                    SetSlotUI(ui, bandageSprite, bandagens.ToString());
-                    break;
-                case 5:
-                    int ammo = ArmaEquipada != null ? ArmaEquipada.municao : 0;
-                    SetSlotUI(ui, ammoSprite, ammo.ToString());
-                    break;
+                case 0: icon = rifleSprite;   break;
+                case 1: icon = shotgunSprite; break;
+                case 2: icon = porreteSprite; break;
+                case 3: icon = grenadeSprite; c = grenades.ToString(); break;
+                case 4: icon = bandageSprite; c = bandages.ToString(); break;
+                case 5: icon = ammoSprite;    c = ammoCount.ToString();  break;
             }
+
+            icons[i].sprite  = icon;
+            icons[i].enabled = icon != null;
+            counts[i].text   = c;
         }
     }
 
-    void SetSlotUI(SlotUI ui, Sprite icon, string count)
+    public void AddBandage(int amt = 1)
     {
-        if (ui.iconImage != null)
-        {
-            ui.iconImage.sprite = icon;
-            ui.iconImage.enabled = icon != null;
-        }
-        if (ui.countText != null)
-            ui.countText.text = count;
-    }
-
-    public bool ConsumirMunicao()
-    {
-        var arma = ArmaEquipada;
-        if (arma == null) return false;
-        if (arma.capacidade == 0) return true;
-        if (arma.municao <= 0) return false;
-        arma.municao--;
+        bandages += amt;
         RefreshUI();
-        OnInventoryChanged?.Invoke();
-        return true;
     }
-
-    public void AumentarCapacidade(WeaponType tipo, int valor)
+    public bool ConsumeAmmo(int amt = 1)
     {
-        foreach (var slot in armas)
+        if (ammoCount >= amt)
         {
-            if (slot.tipo == tipo)
-            {
-                slot.capacidade += valor;
-                slot.municao = Mathf.Min(slot.municao, slot.capacidade);
-                RefreshUI();
-                OnInventoryChanged?.Invoke();
-                break;
-            }
+            ammoCount -= amt;
+            RefreshUI();
+            return true;
         }
-    }
-
-    public void AdicionarMunicao(WeaponType tipo, int valor)
-    {
-        foreach (var slot in armas)
-        {
-            if (slot.tipo == tipo)
-            {
-                if (slot.capacidade > 0)
-                    slot.municao = Mathf.Min(slot.municao + valor, slot.capacidade);
-                RefreshUI();
-                OnInventoryChanged?.Invoke();
-                break;
-            }
-        }
-    }
-
-    public void AddBandage(int amount = 1)
-    {
-        bandagens += amount;
-        RefreshUI();
-        OnInventoryChanged?.Invoke();
-    }
-
-    void ApplyCurrentItem()
-    {
-        
+        return false;
     }
 }

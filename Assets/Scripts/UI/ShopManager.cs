@@ -80,19 +80,7 @@ public class ShopManager : MonoBehaviour
 
     void VerificarBagueteSecreto()
     {
-        if (ScoreManager.instance == null || inventory == null) return;
-        if (SceneManager.GetActiveScene().buildIndex >= 4 && ScoreManager.instance.pontosGastos == 0)
-        {
-            foreach (var slot in inventory.armas)
-            {
-                if (slot != null && slot.tipo == WeaponType.Porrete)
-                {
-                    slot.tipo = WeaponType.PaoBaguete;
-                    slot.municao = slot.capacidade;
-                    break;
-                }
-            }
-        }
+    
     }
 
     public void FecharLoja()
