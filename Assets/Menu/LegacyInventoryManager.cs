@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryManager : MonoBehaviour
+public class LegacyInventoryManager : MonoBehaviour
 {
     [Header("SLOTS INDIVIDUAIS")]
 
