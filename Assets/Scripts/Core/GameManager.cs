@@ -185,7 +185,7 @@ public class GameManager : MonoBehaviour
             dificuldade = CurrentDifficulty
         };
 
-        var inv = FindObjectOfType<InventoryManager>();
+        var inv = FindFirstObjectByType<InventoryManager>();
         if (inv != null)
         {
             data.weaponSlots = new WeaponType[inv.armas.Length];
@@ -201,7 +201,7 @@ public class GameManager : MonoBehaviour
             data.powerUps = inv.powerUps;
         }
 
-        var upgrade = FindObjectOfType<UpgradeSystem>();
+        var upgrade = FindFirstObjectByType<UpgradeSystem>();
         if (upgrade != null)
         {
             data.weaponTier = upgrade.nivelArma;
@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviour
 
         if (data != null)
         {
-            var inv = FindObjectOfType<InventoryManager>();
+            var inv = FindFirstObjectByType<InventoryManager>();
             if (inv != null && data.weaponSlots != null)
             {
                 int len = Mathf.Min(inv.armas.Length, data.weaponSlots.Length);
@@ -251,7 +251,7 @@ public class GameManager : MonoBehaviour
                 inv.powerUps = data.powerUps;
             }
 
-            var upg = FindObjectOfType<UpgradeSystem>();
+            var upg = FindFirstObjectByType<UpgradeSystem>();
             if (upg != null)
                 upg.nivelArma = data.weaponTier;
         }

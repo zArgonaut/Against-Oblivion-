@@ -17,13 +17,13 @@ public class HUDController : MonoBehaviour
     void OnEnable()
     {
         if (inventory == null)
-            inventory = FindObjectOfType<InventoryManager>();
+            inventory = FindFirstObjectByType<InventoryManager>();
         if (health == null)
-            health = FindObjectOfType<PlayerHealth>();
+            health = FindFirstObjectByType<PlayerHealth>();
         if (stamina == null)
-            stamina = FindObjectOfType<PlayerStamina>();
+            stamina = FindFirstObjectByType<PlayerStamina>();
         if (energy == null)
-            energy = FindObjectOfType<PlayerEnergy>();
+            energy = FindFirstObjectByType<PlayerEnergy>();
 
         if (inventory != null)
             inventory.OnInventoryChanged += UpdateWeaponUI;

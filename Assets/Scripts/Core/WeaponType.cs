@@ -7,5 +7,7 @@ public enum WeaponType
     Rifle,
     Shotgun,
     Grenade,
-    Club
+    Club,
+    Porrete,
+    PaoBaguete
 }

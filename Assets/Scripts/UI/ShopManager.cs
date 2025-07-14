@@ -25,8 +25,8 @@ public class ShopManager : MonoBehaviour
 
     void Start()
     {
-        inventory = FindObjectOfType<InventoryManager>();
-        upgradeSystem = FindObjectOfType<UpgradeSystem>();
+        inventory = FindFirstObjectByType<InventoryManager>();
+        upgradeSystem = FindFirstObjectByType<UpgradeSystem>();
 
         if (ScoreManager.instance != null)
             pontosInicio = ScoreManager.instance.pontos;

@@ -35,7 +35,7 @@ public class AdminDebugPanel : MonoBehaviour
 
     void SpawnBoss()
     {
-        var horda = FindObjectOfType<HordaManager>();
+        var horda = FindFirstObjectByType<HordaManager>();
         if (horda == null || horda.bossPrefab == null || horda.pontosSpawn.Length == 0)
             return;
         int idx = Random.Range(0, horda.pontosSpawn.Length);
