@@ -3,6 +3,14 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
+// Define WeaponType enum
+public enum WeaponType
+{
+    Rifle,
+    Shotgun,
+    Porrete
+}
+
 [System.Serializable]
 public class WeaponSlot
 {
@@ -197,6 +205,6 @@ public class InventoryManager : MonoBehaviour
 
     void ApplyCurrentItem()
     {
-        // Future implementation: equip weapon or use item prefabs here.
+        
     }
 }
