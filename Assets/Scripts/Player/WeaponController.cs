@@ -27,7 +27,7 @@ public class WeaponController : MonoBehaviour
         {
             if (energy == null || energy.Consume(energyCost))
             {
-                if (inventory == null || inventory.ConsumirMunicao())
+                if (inventory == null || inventory.ConsumeAmmo())
                 {
                     Shoot();
                     fireTimer = fireRate;

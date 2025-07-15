@@ -89,8 +89,23 @@ public class InventoryManager : MonoBehaviour
     }
 
     public void AddBandage(int v = 1)  { counts[4] += v; RefreshUI(); }
-    public bool ConsumeAmmo(int v = 1) {
-        if (counts[5] >= v) { counts[5] -= v; RefreshUI(); return true; }
+
+    /// <summary>
+    /// Wrapper de compatibilidade em português.
+    /// </summary>
+    public bool ConsumirMunicao(int v = 1)
+    {
+        return ConsumeAmmo(v);
+    }
+
+    public bool ConsumeAmmo(int v = 1)
+    {
+        if (counts[5] >= v)
+        {
+            counts[5] -= v;
+            RefreshUI();
+            return true;
+        }
         return false;
     }
 }
