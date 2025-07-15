@@ -23,6 +23,11 @@ public class InventoryManager : MonoBehaviour
     public Sprite bandageSprite;
     public Sprite ammoSprite;
 
+    // Coleções acessadas pelo GameManager
+    public Weapon[] armas = new Weapon[0];
+    public int bandagens = 0;
+    public int powerUps = 0;
+
     private int[] counts = new int[6];
     private int selectedIndex = 0;
 

@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     int pendingScore = -1;
     SaveData pendingData = null;
     const int startSceneIndex = 1; // Fase1_Deserto
+    InventoryManager inventory;
 
     void Awake()
     {
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            inventory = FindFirstObjectByType<InventoryManager>();
         }
         else
         {
@@ -185,20 +187,19 @@ public class GameManager : MonoBehaviour
             dificuldade = CurrentDifficulty
         };
 
-        var inv = FindFirstObjectByType<InventoryManager>();
-        if (inv != null)
+        if (inventory != null)
         {
-            data.weaponSlots = new WeaponType[inv.armas.Length];
-            data.weaponAmmo = new int[inv.armas.Length];
-            data.ammoCapacidade = new int[inv.armas.Length];
-            for (int i = 0; i < inv.armas.Length; i++)
+            data.weaponSlots = new WeaponType[inventory.armas.Length];
+            data.weaponAmmo = new int[inventory.armas.Length];
+            data.ammoCapacidade = new int[inventory.armas.Length];
+            for (int i = 0; i < inventory.armas.Length; i++)
             {
-                data.weaponSlots[i] = inv.armas[i].tipo;
-                data.weaponAmmo[i] = inv.armas[i].municao;
-                data.ammoCapacidade[i] = inv.armas[i].capacidade;
+                data.weaponSlots[i] = inventory.armas[i].tipo;
+                data.weaponAmmo[i] = inventory.armas[i].municao;
+                data.ammoCapacidade[i] = inventory.armas[i].capacidade;
             }
-            data.bandagens = inv.bandagens;
-            data.powerUps = inv.powerUps;
+            data.bandagens = inventory.bandagens;
+            data.powerUps = inventory.powerUps;
         }
 
         var upgrade = FindFirstObjectByType<UpgradeSystem>();
@@ -226,6 +227,8 @@ public class GameManager : MonoBehaviour
         // Carrega dados do slot atual se não houver pendência do StartGame
         var data = pendingData != null ? pendingData : SaveSystem.Load(CurrentSlot);
 
+        inventory = FindFirstObjectByType<InventoryManager>();
+
         if (ScoreManager.instance != null)
         {
             int score = pendingScore >= 0 ? pendingScore : (data != null ? data.pontos : 0);
@@ -235,21 +238,21 @@ public class GameManager : MonoBehaviour
 
         if (data != null)
         {
-            var inv = FindFirstObjectByType<InventoryManager>();
-            if (inv != null && data.weaponSlots != null)
+            if (inventory != null && data.weaponSlots != null)
             {
-                int len = Mathf.Min(inv.armas.Length, data.weaponSlots.Length);
+                int len = Mathf.Min(inventory.armas.Length, data.weaponSlots.Length);
                 for (int i = 0; i < len; i++)
                 {
-                    inv.armas[i].tipo = data.weaponSlots[i];
+                    inventory.armas[i].tipo = data.weaponSlots[i];
                     if (data.weaponAmmo != null && data.weaponAmmo.Length > i)
-                        inv.armas[i].municao = data.weaponAmmo[i];
+                        inventory.armas[i].municao = data.weaponAmmo[i];
                     if (data.ammoCapacidade != null && data.ammoCapacidade.Length > i)
-                        inv.armas[i].capacidade = data.ammoCapacidade[i];
+                        inventory.armas[i].capacidade = data.ammoCapacidade[i];
                 }
-                inv.bandagens = data.bandagens;
-                inv.powerUps = data.powerUps;
+                inventory.bandagens = data.bandagens;
+                inventory.powerUps = data.powerUps;
             }
+
 
             var upg = FindFirstObjectByType<UpgradeSystem>();
             if (upg != null)
