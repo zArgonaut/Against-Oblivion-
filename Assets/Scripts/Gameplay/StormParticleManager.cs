@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections; 
 
 [RequireComponent(typeof(BoxCollider2D))]
 public class StormParticleManager : MonoBehaviour
