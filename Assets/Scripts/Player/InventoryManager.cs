@@ -2,7 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-// using Core;  // seu namespace onde está WeaponType
+
+[System.Serializable]
+public class Arma
+{
+    public WeaponType tipo;
+    public int municao;
+    public int capacidade;
+}
 
 public class InventoryManager : MonoBehaviour
 {
@@ -19,15 +26,20 @@ public class InventoryManager : MonoBehaviour
     public Sprite ammoSprite;
 
     [Header("Dados de Inventário")]
-    public int grenades    = 2;
-    public int bandages   = 0;
-    public int ammoCount  = 30;
+    public Arma[] armas = new Arma[3]; // Rifle, Shotgun, Porrete
+    public int grenades   = 2;
+    public int bandagens  = 0;
+    public int powerUps   = 0;
 
     private Image[] icons;
     private TMP_Text[] counts;
     private Image[] highlights;
 
     private int selectedSlot = 0;
+
+    public Arma ArmaEquipada => selectedSlot < armas.Length ? armas[selectedSlot] : null;
+
+    public event Action OnInventoryChanged;
 
     void Awake()
     {
@@ -48,8 +60,17 @@ public class InventoryManager : MonoBehaviour
 
     void Start()
     {
+        if (armas == null || armas.Length == 0)
+        {
+            armas = new Arma[3];
+            armas[0] = new Arma { tipo = WeaponType.Rifle, municao = 30, capacidade = 30 };
+            armas[1] = new Arma { tipo = WeaponType.Shotgun, municao = 8, capacidade = 8 };
+            armas[2] = new Arma { tipo = WeaponType.Porrete, municao = 0, capacidade = 0 };
+        }
+
         RefreshUI();
         UpdateHighlight();
+        OnInventoryChanged?.Invoke();
     }
 
     void Update()
@@ -77,6 +98,7 @@ public class InventoryManager : MonoBehaviour
         selectedSlot = idx;
         RefreshUI();
         UpdateHighlight();
+        OnInventoryChanged?.Invoke();
     }
 
     private void UpdateHighlight()
@@ -92,14 +114,26 @@ public class InventoryManager : MonoBehaviour
             Sprite icon = null;
             string c    = "";
 
-            switch (i)
+            if (i < armas.Length)
             {
-                case 0: icon = rifleSprite;   break;
-                case 1: icon = shotgunSprite; break;
-                case 2: icon = porreteSprite; break;
-                case 3: icon = grenadeSprite; c = grenades.ToString(); break;
-                case 4: icon = bandageSprite; c = bandages.ToString(); break;
-                case 5: icon = ammoSprite;    c = ammoCount.ToString();  break;
+                var arma = armas[i];
+                switch (arma.tipo)
+                {
+                    case WeaponType.Rifle:   icon = rifleSprite;   break;
+                    case WeaponType.Shotgun: icon = shotgunSprite; break;
+                    case WeaponType.Porrete: icon = porreteSprite; break;
+                }
+                c = arma.municao.ToString();
+            }
+            else if (i == armas.Length)
+            {
+                icon = grenadeSprite;
+                c = grenades.ToString();
+            }
+            else if (i == armas.Length + 1)
+            {
+                icon = bandageSprite;
+                c = bandagens.ToString();
             }
 
             icons[i].sprite  = icon;
@@ -110,17 +144,51 @@ public class InventoryManager : MonoBehaviour
 
     public void AddBandage(int amt = 1)
     {
-        bandages += amt;
+        bandagens += amt;
         RefreshUI();
+        OnInventoryChanged?.Invoke();
     }
-    public bool ConsumeAmmo(int amt = 1)
+
+    public bool ConsumirMunicao(int amt = 1)
     {
-        if (ammoCount >= amt)
+        var arma = ArmaEquipada;
+        if (arma != null && arma.municao >= amt)
         {
-            ammoCount -= amt;
+            arma.municao -= amt;
             RefreshUI();
+            OnInventoryChanged?.Invoke();
             return true;
         }
         return false;
+    }
+
+    public void AdicionarMunicao(WeaponType tipo, int amt)
+    {
+        foreach (var a in armas)
+        {
+            if (a.tipo == tipo)
+            {
+                a.municao += amt;
+                if (a.municao > a.capacidade)
+                    a.municao = a.capacidade;
+                break;
+            }
+        }
+        RefreshUI();
+        OnInventoryChanged?.Invoke();
+    }
+
+    public void AumentarCapacidade(WeaponType tipo, int amt)
+    {
+        foreach (var a in armas)
+        {
+            if (a.tipo == tipo)
+            {
+                a.capacidade += amt;
+                break;
+            }
+        }
+        RefreshUI();
+        OnInventoryChanged?.Invoke();
     }
 }
