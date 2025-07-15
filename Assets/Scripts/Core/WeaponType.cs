@@ -1,9 +1,6 @@
-namespace Core
+public enum WeaponType
 {
-    public enum WeaponType
-    {
-        Rifle,
-        Shotgun,
-        Porrete
-    }
+    Rifle,
+    Shotgun,
+    Porrete
 }
