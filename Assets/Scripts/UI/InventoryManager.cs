@@ -30,15 +30,15 @@ public class InventoryManager : MonoBehaviour
 
     private int[] counts = new int[6];
     private int selectedIndex = 0;
+    private int lastSelectedIndex = -1;
 
     void Start()
     {
         counts = new int[] { 1, 1, 1, 2, 0, 30 };
         foreach (var h in slotHighlights)
             if (h) h.gameObject.SetActive(false);
-
         RefreshUI();
-        UpdateHighlight();
+        SelectSlot(0);
     }
 
     void Update()
@@ -54,13 +54,25 @@ public class InventoryManager : MonoBehaviour
 
     private void SelectSlot(int idx)
     {
+        if (idx == selectedIndex || idx < 0 || idx >= slotHighlights.Length)
+            return;
+
+        if (slotHighlights[selectedIndex])
+            slotHighlights[selectedIndex].gameObject.SetActive(false);
+
         selectedIndex = idx;
+
+        if (slotHighlights[selectedIndex])
+            slotHighlights[selectedIndex].gameObject.SetActive(true);
+
         RefreshUI();
-        UpdateHighlight();
     }
 
     private void UpdateHighlight()
     {
+        if (slotHighlights == null || slotHighlights.Length == 0)
+            return;
+
         for (int i = 0; i < slotHighlights.Length; i++)
             if (slotHighlights[i])
                 slotHighlights[i].gameObject.SetActive(i == selectedIndex);
