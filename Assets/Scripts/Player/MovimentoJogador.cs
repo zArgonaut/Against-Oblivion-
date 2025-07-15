@@ -188,4 +188,5 @@ public class MovimentoJogador : MonoBehaviour
     void ExibirDebug()
     {
         Debug.Log($"🧭 Vel: {velocidadeAtual:F2} | Correndo: {estaCorrendo} | NoChão: {estaNoChao}");
-    }}
+    }
+}

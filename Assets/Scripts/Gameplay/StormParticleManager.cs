@@ -1,19 +1,20 @@
 using UnityEngine;
-using System.Collections; 
+using UnityEngine.VFX;
+using System.Collections;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class StormParticleManager : MonoBehaviour
+public class StormManager : MonoBehaviour
 {
-    [Header("Particle Prefabs")]
-    [Tooltip("Arraste aqui todos os prefabs de ParticleSystem para a tempestade.")]
-    public GameObject[] particlePrefabs;
+    [Header("Particle VFX Assets")]
+    [Tooltip("Arraste aqui os VisualEffectAsset dos seus VFX Graph (ex: Sandstorm_FundoVFX).")]
+    public VisualEffectAsset[] vfxAssets;
 
     [Header("Spawn Area (BoxCollider2D)")]
     [Tooltip("O BoxCollider2D deve estar em modo Trigger e define a área de spawn.")]
     public bool useColliderBounds = true;
 
     [Header("Spawn Settings")]
-    [Tooltip("Quantas partículas spawnar a cada intervalo.")]
+    [Tooltip("Quantas instâncias de FX spawnar a cada intervalo.")]
     public int spawnCount = 5;
     [Tooltip("Intervalo em segundos entre cada spawn.")]
     public float spawnInterval = 0.2f;
@@ -25,7 +26,7 @@ public class StormParticleManager : MonoBehaviour
     {
         spawnArea = GetComponent<BoxCollider2D>();
         if (useColliderBounds && (spawnArea == null || !spawnArea.isTrigger))
-            Debug.LogWarning($"{nameof(StormParticleManager)} precisa de um BoxCollider2D em modo Trigger para definir a área!");
+            Debug.LogWarning($"{nameof(StormManager)} precisa de um BoxCollider2D em modo Trigger para definir a área!");
     }
 
     void Start()
@@ -40,7 +41,6 @@ public class StormParticleManager : MonoBehaviour
         stormRoutine = StartCoroutine(StormRoutine());
     }
 
-
     [ContextMenu("Stop Storm")]
     public void StopStorm()
     {
@@ -52,19 +52,17 @@ public class StormParticleManager : MonoBehaviour
         while (true)
         {
             for (int i = 0; i < spawnCount; i++)
-            {
-                SpawnParticle();
-            }
+                SpawnVFX();
             yield return new WaitForSeconds(spawnInterval);
         }
     }
 
-    private void SpawnParticle()
+    private void SpawnVFX()
     {
-        if (particlePrefabs == null || particlePrefabs.Length == 0)
+        if (vfxAssets == null || vfxAssets.Length == 0)
             return;
 
-        GameObject prefab = particlePrefabs[Random.Range(0, particlePrefabs.Length)];
+        VisualEffectAsset asset = vfxAssets[Random.Range(0, vfxAssets.Length)];
 
         Vector3 spawnPos = transform.position;
         if (useColliderBounds && spawnArea != null)
@@ -73,7 +71,7 @@ public class StormParticleManager : MonoBehaviour
             spawnPos = new Vector3(
                 Random.Range(b.min.x, b.max.x),
                 Random.Range(b.min.y, b.max.y),
-                spawnPos.z
+                transform.position.z
             );
         }
         else
@@ -85,19 +83,22 @@ public class StormParticleManager : MonoBehaviour
             );
         }
 
-        Instantiate(prefab, spawnPos, Quaternion.identity, transform);
+        GameObject go = new GameObject($"StormVFX_{asset.name}");
+        go.transform.SetParent(transform, false);
+        go.transform.position = spawnPos;
+
+        var vfx = go.AddComponent<VisualEffect>();
+        vfx.visualEffectAsset = asset;
+        vfx.Play();
     }
 
     void OnDrawGizmosSelected()
     {
-        if (useColliderBounds)
-        {
-            var col = GetComponent<BoxCollider2D>();
-            if (col != null)
-            {
-                Gizmos.color = new Color(1f, 0.8f, 0f, 0.3f);
-                Gizmos.DrawCube(col.bounds.center, col.bounds.size);
-            }
-        }
+        if (!useColliderBounds) return;
+        var col = GetComponent<BoxCollider2D>();
+        if (col == null) return;
+
+        Gizmos.color = new Color(1f, 0.8f, 0f, 0.3f);
+        Gizmos.DrawCube(col.bounds.center, col.bounds.size);
     }
 }

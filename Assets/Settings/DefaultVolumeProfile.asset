@@ -786,7 +786,7 @@ MonoBehaviour:
     m_Value: {fileID: 8900000, guid: cd7d58d5520a6874587342352e94b970, type: 3}
   distortionMode:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   flowmap:
     m_OverrideState: 1
     m_Value: {fileID: 0}
