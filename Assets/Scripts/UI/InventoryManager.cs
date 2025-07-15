@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -46,6 +47,16 @@ public class InventoryManager : MonoBehaviour
     // Eventos para notificar outros sistemas
     public System.Action<int> OnSlotSelected;
     public System.Action<GameObject> OnPrefabSelected;
+
+    // Eventos unificados
+    public static event Action<int> OnSlotChangedStatic;
+    public event Action OnInventoryChanged;
+
+    // Propriedade para arma atual
+    public WeaponType ArmaEquipada
+    {
+        get { return (WeaponType)selectedIndex; }
+    }
 
     void Start()
     {
@@ -196,8 +207,10 @@ public class InventoryManager : MonoBehaviour
 
         // Notifica outros sistemas
         OnSlotSelected?.Invoke(selectedIndex);
-        
+        OnSlotChangedStatic?.Invoke(selectedIndex);
+
         RefreshUI();
+        OnInventoryChanged?.Invoke();
     }
 
     private void HandlePrefabSelection()
@@ -250,6 +263,7 @@ public class InventoryManager : MonoBehaviour
         {
             inventoryItems[slotIndex].count += amount;
             RefreshUI();
+            OnInventoryChanged?.Invoke();
         }
     }
 
@@ -261,6 +275,7 @@ public class InventoryManager : MonoBehaviour
             {
                 inventoryItems[slotIndex].count -= amount;
                 RefreshUI();
+                OnInventoryChanged?.Invoke();
                 return true;
             }
         }
@@ -273,6 +288,7 @@ public class InventoryManager : MonoBehaviour
         {
             inventoryItems[slotIndex].count = count;
             RefreshUI();
+            OnInventoryChanged?.Invoke();
         }
     }
 
@@ -305,6 +321,7 @@ public class InventoryManager : MonoBehaviour
     {
         AddItem(4, v);
         bandagens = GetItemCount(4);
+        OnInventoryChanged?.Invoke();
     }
 
     public bool ConsumirMunicao(int v = 1)
@@ -318,8 +335,26 @@ public class InventoryManager : MonoBehaviour
         if (result)
         {
             // Atualiza variável de compatibilidade se necessário
+            OnInventoryChanged?.Invoke();
         }
         return result;
+    }
+
+    /// <summary> aumenta a capacidade de um slot genérico </summary>
+    public void AumentarCapacidade(int slotIndex, int quantidade)
+    {
+        if (slotIndex >= 0 && slotIndex < inventoryItems.Length)
+        {
+            inventoryItems[slotIndex].count += quantidade;
+            RefreshUI();
+            OnInventoryChanged?.Invoke();
+        }
+    }
+
+    /// <summary> especificamente para munição (slot 5) </summary>
+    public void AdicionarMunicao(int quantidade)
+    {
+        AumentarCapacidade(5, quantidade);
     }
 
     // Método para configurar item via código
@@ -336,6 +371,7 @@ public class InventoryManager : MonoBehaviour
                 showCount = showCount
             };
             RefreshUI();
+            OnInventoryChanged?.Invoke();
         }
     }
 }

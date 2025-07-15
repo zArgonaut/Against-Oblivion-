@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -25,11 +26,14 @@ public class ShopManager : MonoBehaviour
 
     void Start()
     {
-        inventory = FindObjectOfType<InventoryManager>();
-        upgradeSystem = FindObjectOfType<UpgradeSystem>();
+        inventory = Object.FindFirstObjectByType<InventoryManager>();
+        upgradeSystem = Object.FindFirstObjectByType<UpgradeSystem>();
 
         if (ScoreManager.instance != null)
             pontosInicio = ScoreManager.instance.pontos;
+
+        if (inventory != null)
+            inventory.OnInventoryChanged += AtualizarUI;
 
         if (upgradeWeaponBtn) upgradeWeaponBtn.onClick.AddListener(() => ComprarItem("upgrade"));
         if (capacityBtn) capacityBtn.onClick.AddListener(() => ComprarItem("capacidade"));
@@ -50,12 +54,12 @@ public class ShopManager : MonoBehaviour
                     upgradeSystem?.AplicarUpgrade();
                 break;
             case "capacidade":
-                if (ScoreManager.instance.SpendPoints(capacityCost) && inventory != null && inventory.ArmaEquipada != null)
-                    inventory.AumentarCapacidade(inventory.ArmaEquipada.tipo, capacityIncrease);
+                if (ScoreManager.instance.SpendPoints(capacityCost) && inventory != null)
+                    inventory.AumentarCapacidade((int)inventory.ArmaEquipada, capacityIncrease);
                 break;
             case "municao":
-                if (ScoreManager.instance.SpendPoints(ammoCost) && inventory != null && inventory.ArmaEquipada != null)
-                    inventory.AdicionarMunicao(inventory.ArmaEquipada.tipo, ammoIncrease);
+                if (ScoreManager.instance.SpendPoints(ammoCost) && inventory != null)
+                    inventory.AdicionarMunicao(ammoIncrease);
                 break;
         }
         AtualizarUI();
@@ -101,4 +105,11 @@ public class ShopManager : MonoBehaviour
         if (GameManager.Instance)
             GameManager.Instance.ExitShop();
     }
+
+    void OnDestroy()
+    {
+        if (inventory != null)
+            inventory.OnInventoryChanged -= AtualizarUI;
+    }
 }
+

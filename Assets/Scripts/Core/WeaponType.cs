@@ -2,5 +2,9 @@ public enum WeaponType
 {
     Rifle,
     Shotgun,
-    Porrete
+    Porrete,
+    Granada,
+    Bandagem,
+    Municao,
+    PaoBaguete
 }

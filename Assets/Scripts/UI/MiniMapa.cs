@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ public class MiniMapa : MonoBehaviour
     {
         if (player == null)
         {
-            var p = FindObjectOfType<PlayerMovement>();
+            var p = Object.FindAnyObjectByType<PlayerMovement>();
             if (p) player = p.transform;
         }
         CreateBlips();
@@ -26,7 +27,7 @@ public class MiniMapa : MonoBehaviour
     {
         if (area == null || blipPrefab == null) return;
 
-        foreach (var enemy in FindObjectsOfType<EnemyHealth>())
+        foreach (var enemy in Object.FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None))
         {
             if (!blips.ContainsKey(enemy.transform))
             {
