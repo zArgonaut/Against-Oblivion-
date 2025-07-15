@@ -15,6 +15,7 @@ public class MouseLook : MonoBehaviour
     public Transform corpoJogador; // A transformação do seu jogador (o objeto com o CharacterController)
 
     private float rotacaoX = 0f; // Rotação vertical da câmera
+    private float rotacaoY = 0f; // Rotação horizontal do jogador
 
     void Start()
     {

@@ -3,51 +3,85 @@ using TMPro;
 
 public class HUDController : MonoBehaviour
 {
-    public TextMeshProUGUI energyText;
+    public TextMeshProUGUI weaponText;
+    public TextMeshProUGUI ammoText;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI staminaText;
+    public TextMeshProUGUI energyText;
 
-    PlayerEnergy energy;
+    InventoryManager inventory;
     PlayerHealth health;
     PlayerStamina stamina;
+    PlayerEnergy energy;
 
-    void Awake()
+    void OnEnable()
     {
-        energy = FindFirstObjectByType<PlayerEnergy>();
-        health = FindFirstObjectByType<PlayerHealth>();
-        stamina = FindFirstObjectByType<PlayerStamina>();
+        if (inventory == null)
+            inventory = FindObjectOfType<InventoryManager>();
+        if (health == null)
+            health = FindObjectOfType<PlayerHealth>();
+        if (stamina == null)
+            stamina = FindObjectOfType<PlayerStamina>();
+        if (energy == null)
+            energy = FindObjectOfType<PlayerEnergy>();
 
-        if (energy != null) energy.OnEnergyChanged += UpdateEnergy;
-        if (health != null) health.OnHealthChanged += UpdateHealth;
-        if (stamina != null) stamina.OnStaminaChanged += UpdateStamina;
+        if (inventory != null)
+            inventory.OnInventoryChanged += UpdateWeaponUI;
+        if (health != null)
+            health.OnHealthChanged += UpdateHealthUI;
+        if (stamina != null)
+            stamina.OnStaminaChanged += UpdateStaminaUI;
+        if (energy != null)
+            energy.OnEnergyChanged += UpdateEnergyUI;
 
-        if (energy != null) UpdateEnergy(energy.currentEnergy);
-        if (health != null) UpdateHealth(health.currentHealth);
-        if (stamina != null) UpdateStamina(stamina.currentStamina);
+        UpdateWeaponUI();
+        if (health != null) UpdateHealthUI(health.currentHealth);
+        if (stamina != null) UpdateStaminaUI(stamina.currentStamina);
+        if (energy != null) UpdateEnergyUI(energy.currentEnergy);
     }
 
-    void OnDestroy()
+    void OnDisable()
     {
-        if (energy != null) energy.OnEnergyChanged -= UpdateEnergy;
-        if (health != null) health.OnHealthChanged -= UpdateHealth;
-        if (stamina != null) stamina.OnStaminaChanged -= UpdateStamina;
+        if (inventory != null)
+            inventory.OnInventoryChanged -= UpdateWeaponUI;
+        if (health != null)
+            health.OnHealthChanged -= UpdateHealthUI;
+        if (stamina != null)
+            stamina.OnStaminaChanged -= UpdateStaminaUI;
+        if (energy != null)
+            energy.OnEnergyChanged -= UpdateEnergyUI;
     }
 
-    void UpdateEnergy(int value)
+    void UpdateWeaponUI()
     {
-        if (energyText != null)
-            energyText.text = "Energy: " + value;
+        if (inventory == null || inventory.ArmaEquipada == null)
+            return;
+
+        var arma = inventory.ArmaEquipada;
+        if (weaponText != null)
+            weaponText.text = arma.tipo.ToString();
+        if (ammoText != null)
+        {
+            string ammo = arma.capacidade == 0 ? "\u221E" : arma.municao + "/" + arma.capacidade;
+            ammoText.text = ammo;
+        }
     }
 
-    void UpdateHealth(int value)
+    void UpdateHealthUI(int value)
     {
-        if (healthText != null)
-            healthText.text = "HP: " + value;
+        if (healthText != null && health != null)
+            healthText.text = "HP: " + value + "/" + health.maxHealth;
     }
 
-    void UpdateStamina(int value)
+    void UpdateStaminaUI(int value)
     {
-        if (staminaText != null)
-            staminaText.text = "Stamina: " + value;
+        if (staminaText != null && stamina != null)
+            staminaText.text = "ST: " + value + "/" + stamina.maxStamina;
+    }
+
+    void UpdateEnergyUI(int value)
+    {
+        if (energyText != null && energy != null)
+            energyText.text = "EN: " + value + "/" + energy.maxEnergy;
     }
 }

@@ -6,6 +6,7 @@ public class SaveData
     public int faseAtual;
     public int pontos;
     public GameManager.Difficulty dificuldade;
+    // Inventory and upgrades
     public WeaponType[] weaponSlots;
     public int[] weaponAmmo;
     public int bandagens;

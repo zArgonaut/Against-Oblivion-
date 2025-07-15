@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
@@ -21,12 +22,16 @@ public class MovimentoJogador : MonoBehaviour
     public Transform cameraTransform;
 
     [Header("Mouse Look")]
-    [Tooltip("Velocidade base do mouse")]
     public float sensibilidadeMouse = 50f;
-    [Tooltip("Quanto a câmera segue suavemente o mouse")]
     public float suavidadeMouse = 5f;
     [Range(-90f, 0f)] public float limiteInferior = -60f;
     [Range(0f, 90f)] public float limiteSuperior = 60f;
+
+    [Header("Efeitos Visuais")]
+    [Tooltip("Efeito de poeira que sai do personagem ao se mover.")]
+    public VisualEffect poeiraDeMovimento;
+    [Tooltip("Quantas partículas emitir por segundo ao se mover.")]
+    public uint taxaEmissaoPoeira = 200;
 
     private float rotYaw = 0f;
     private float rotPitch = 0f;
@@ -51,11 +56,9 @@ public class MovimentoJogador : MonoBehaviour
         if (cameraTransform == null && Camera.main != null)
             cameraTransform = Camera.main.transform;
 
-        // Lock e hide do cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        // Inicializa rotação atual com a rotação existente da câmera
+        
         Vector3 angles = cameraTransform.localEulerAngles;
         rotYaw = transform.eulerAngles.y;
         rotPitch = angles.x;
@@ -63,19 +66,10 @@ public class MovimentoJogador : MonoBehaviour
 
     void Update()
     {
-        // Toggle de cursor para debug
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Cursor.lockState == CursorLockMode.Locked)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
+            Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = Cursor.lockState != CursorLockMode.Locked;
         }
 
         if (!gameObject.activeInHierarchy || !controller.enabled)
@@ -89,7 +83,10 @@ public class MovimentoJogador : MonoBehaviour
         ProcessarPulo();
         AtualizarAnimacoes();
         ExibirDebug();
+        ProcessarPoeiraDeMovimento();
     }
+
+    // --- NENHUMA MUDANÇA NAS FUNÇÕES ABAIXO ---
 
     void CapturarInput()
     {
@@ -133,20 +130,16 @@ public class MovimentoJogador : MonoBehaviour
     {
         if (cameraTransform == null) return;
 
-        // captura movimento bruto do mouse
         float deltaX = Input.GetAxis("Mouse X") * sensibilidadeMouse;
         float deltaY = Input.GetAxis("Mouse Y") * sensibilidadeMouse;
 
-        // acumula rotação
         rotYaw += deltaX * Time.deltaTime;
         rotPitch -= deltaY * Time.deltaTime;
         rotPitch = Mathf.Clamp(rotPitch, limiteInferior, limiteSuperior);
 
-        // suaviza valores antes de aplicar
-        float smoothYaw  = Mathf.LerpAngle(transform.eulerAngles.y, rotYaw, Time.deltaTime * suavidadeMouse);
+        float smoothYaw   = Mathf.LerpAngle(transform.eulerAngles.y, rotYaw, Time.deltaTime * suavidadeMouse);
         float smoothPitch = Mathf.LerpAngle(cameraTransform.localEulerAngles.x, rotPitch, Time.deltaTime * suavidadeMouse);
 
-        // aplica rotações
         transform.rotation = Quaternion.Euler(0f, smoothYaw, 0f);
         cameraTransform.localRotation = Quaternion.Euler(smoothPitch, 0f, 0f);
     }
@@ -188,5 +181,21 @@ public class MovimentoJogador : MonoBehaviour
     void ExibirDebug()
     {
         Debug.Log($"🧭 Vel: {velocidadeAtual:F2} | Correndo: {estaCorrendo} | NoChão: {estaNoChao}");
+    }
+
+    // --- FUNÇÃO MODIFICADA ---
+    private void ProcessarPoeiraDeMovimento()
+    {
+        // Verifica se o personagem está se movendo, se NÃO está correndo, e se está no chão
+        bool deveEmitir = velocidadeAtual > 0.1f && !estaCorrendo && estaNoChao;
+
+        // Define a taxa de emissão baseada na condição acima
+        uint taxaAtual = deveEmitir ? taxaEmissaoPoeira : 0;
+
+        // Manda o comando para o efeito de partícula
+        if (poeiraDeMovimento != null)
+        {
+            poeiraDeMovimento.SetUInt("SpawnRate", taxaAtual);
+        }
     }
 }

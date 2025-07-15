@@ -121,7 +121,7 @@ public class SceneInitializer : MonoBehaviour
     // Instancia jogador no centro
     void CriarPlayer()
     {
-        if (FindFirstObjectByType<PlayerMovement>() != null)
+        if (FindObjectOfType<PlayerMovement>() != null)
             return;
 
         GameObject prefab = playerPrefab != null ? playerPrefab : PrefabFactory.CreatePlayer();
@@ -148,7 +148,7 @@ public class SceneInitializer : MonoBehaviour
         if (hudPrefab == null) hudPrefab = PrefabFactory.CreateScoreHUD();
 
         GameObject hudObj = null;
-        if (FindFirstObjectByType<ScoreManager>() == null && hudPrefab != null)
+        if (FindObjectOfType<ScoreManager>() == null && hudPrefab != null)
             hudObj = Instantiate(hudPrefab);
 
         if (hudObj != null)

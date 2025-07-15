@@ -100,6 +100,6 @@ public class HordaManager : MonoBehaviour
 
     bool ExistemInimigosVivos()
     {
-        return FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None).Length > 0;
+        return FindObjectsOfType<EnemyHealth>().Length > 0;
     }
 }
