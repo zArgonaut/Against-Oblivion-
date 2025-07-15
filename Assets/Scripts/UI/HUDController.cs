@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 
@@ -14,16 +15,12 @@ public class HUDController : MonoBehaviour
     PlayerStamina stamina;
     PlayerEnergy energy;
 
-    void OnEnable()
+    void Start()
     {
-        if (inventory == null)
-            inventory = FindObjectOfType<InventoryManager>();
-        if (health == null)
-            health = FindObjectOfType<PlayerHealth>();
-        if (stamina == null)
-            stamina = FindObjectOfType<PlayerStamina>();
-        if (energy == null)
-            energy = FindObjectOfType<PlayerEnergy>();
+        inventory = Object.FindFirstObjectByType<InventoryManager>();
+        health = Object.FindFirstObjectByType<PlayerHealth>();
+        stamina = Object.FindFirstObjectByType<PlayerStamina>();
+        energy = Object.FindFirstObjectByType<PlayerEnergy>();
 
         if (inventory != null)
             inventory.OnInventoryChanged += UpdateWeaponUI;
@@ -40,7 +37,7 @@ public class HUDController : MonoBehaviour
         if (energy != null) UpdateEnergyUI(energy.currentEnergy);
     }
 
-    void OnDisable()
+    void OnDestroy()
     {
         if (inventory != null)
             inventory.OnInventoryChanged -= UpdateWeaponUI;
@@ -54,16 +51,16 @@ public class HUDController : MonoBehaviour
 
     void UpdateWeaponUI()
     {
-        if (inventory == null || inventory.ArmaEquipada == null)
+        if (inventory == null)
             return;
 
         var arma = inventory.ArmaEquipada;
         if (weaponText != null)
-            weaponText.text = arma.tipo.ToString();
+            weaponText.text = arma.ToString();
         if (ammoText != null)
         {
-            string ammo = arma.capacidade == 0 ? "\u221E" : arma.municao + "/" + arma.capacidade;
-            ammoText.text = ammo;
+            int ammo = inventory.GetItemCount(5);
+            ammoText.text = ammo.ToString();
         }
     }
 

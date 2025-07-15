@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // SceneInitializer monta programaticamente cada fase ao iniciar a cena.
@@ -121,7 +122,7 @@ public class SceneInitializer : MonoBehaviour
     // Instancia jogador no centro
     void CriarPlayer()
     {
-        if (FindObjectOfType<PlayerMovement>() != null)
+        if (Object.FindAnyObjectByType<PlayerMovement>() != null)
             return;
 
         GameObject prefab = playerPrefab != null ? playerPrefab : PrefabFactory.CreatePlayer();
@@ -148,7 +149,7 @@ public class SceneInitializer : MonoBehaviour
         if (hudPrefab == null) hudPrefab = PrefabFactory.CreateScoreHUD();
 
         GameObject hudObj = null;
-        if (FindObjectOfType<ScoreManager>() == null && hudPrefab != null)
+        if (Object.FindAnyObjectByType<ScoreManager>() == null && hudPrefab != null)
             hudObj = Instantiate(hudPrefab);
 
         if (hudObj != null)
